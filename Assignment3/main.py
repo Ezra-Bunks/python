@@ -1,3 +1,11 @@
+"""
+Course: BSE2302	PROFESSIONAL SOFTWARE ENGINEERING MINI PRACTICAL PROJECT II
+Assignment2: World Cup Game
+Name: Mukisa Ben Ezra
+RegNo: 24/U/21328
+Date: June 14, 2026
+"""
+
 import random
 
 def simulate_world_cup():
