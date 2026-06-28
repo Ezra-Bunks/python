@@ -14,3 +14,11 @@
 2026-06-28 22:46:58,646 - INFO - Updated student: 24/U/21456
 2026-06-28 22:47:05,340 - INFO - User chose option: 6
 2026-06-28 22:47:05,340 - INFO - Student Management System exited.
+2026-06-28 22:56:43,137 - INFO - Student Management System initialized.
+2026-06-28 22:56:43,138 - INFO - Attempting to load student data.
+2026-06-28 22:56:43,138 - INFO - Data loading complete.
+2026-06-28 22:56:43,138 - INFO - Student Management System started.
+2026-06-28 22:56:53,815 - INFO - User chose option: 2
+2026-06-28 22:56:53,815 - INFO - Viewed all 6 student records.
+2026-06-28 22:57:00,006 - INFO - User chose option: 3
+2026-06-28 22:57:12,073 - WARNING - Search for non-existent student: Student with Registration Number '24/U/21213' not found.

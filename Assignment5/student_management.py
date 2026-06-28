@@ -10,6 +10,9 @@ LOG_FILE = 'student_system.log'
 logging.basicConfig(filename=LOG_FILE, level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s')
 
+class StudentNotFoundException(Exception):
+    pass
+
 class Student:
     def __init__(self, reg_no, name, age, grade, address="", contact="", program=""):
         self.reg_no = reg_no
@@ -180,9 +183,7 @@ class StudentManagementSystem:
         reg_no = input("Enter Registration Number to search: ").strip().upper()
 
         if reg_no not in self.students:
-            print(f"Search Error: Student with Registration Number '{reg_no}' not found.")
-            logging.warning(f"Search for non-existent student: {reg_no}")
-            return
+            raise StudentNotFoundException(f"Student with Registration Number '{reg_no}' not found.")
 
         student = self.students[reg_no]
         print("\n--- Student Found ---")
@@ -196,9 +197,7 @@ class StudentManagementSystem:
             reg_no = input("Enter Registration Number of student to update: ").strip().upper()
 
             if reg_no not in self.students:
-                print(f"Update Error: Student with Registration Number '{reg_no}' not found.")
-                logging.warning(f"Attempted to update non-existent student: {reg_no}")
-                return
+                raise StudentNotFoundException(f"Student with Registration Number '{reg_no}' not found.")
 
             student = self.students[reg_no]
             print(f"Current details for {student.name} (Reg No: {reg_no}):")
@@ -233,6 +232,9 @@ class StudentManagementSystem:
             print(f"Student '{student.name}' (Reg No: {reg_no}) updated successfully.")
             logging.info(f"Updated student: {reg_no}")
 
+        except StudentNotFoundException as e:
+            print(f"Update Error: {e}")
+            logging.warning(f"Attempted to update non-existent student: {reg_no}")
         except ValueError as e:
             print(f"Input Error: Please enter valid numbers for Age and Grade. ({e})")
             logging.error(f"Input error during update_student: {e}")
@@ -246,9 +248,7 @@ class StudentManagementSystem:
         reg_no = input("Enter Registration Number of student to delete: ").strip().upper()
 
         if reg_no not in self.students:
-            print(f"Delete Error: Student with Registration Number '{reg_no}' not found.")
-            logging.warning(f"Attempted to delete non-existent student: {reg_no}")
-            return
+            raise StudentNotFoundException(f"Student with Registration Number '{reg_no}' not found.")
 
         student_name = self.students[reg_no].name
         del self.students[reg_no]
@@ -278,11 +278,25 @@ class StudentManagementSystem:
             elif choice == '2':
                 self.view_all_students()
             elif choice == '3':
-                self.search_student()
+                try:
+                    self.search_student()
+                except StudentNotFoundException as e:
+                    print(f"Search Error: {e}")
+                    logging.warning(f"Search for non-existent student: {e}")
+                except Exception as e:
+                    print(f"An unexpected error occurred: {e}")
+                    logging.error(f"Unexpected error during search_student: {e}")
             elif choice == '4':
                 self.update_student()
             elif choice == '5':
-                self.delete_student()
+                try:
+                    self.delete_student()
+                except StudentNotFoundException as e:
+                    print(f"Delete Error: {e}")
+                    logging.warning(f"Attempted to delete non-existent student: {e}")
+                except Exception as e:
+                    print(f"An unexpected error occurred: {e}")
+                    logging.error(f"Unexpected error during delete_student: {e}")
             elif choice == '6':
                 print("Exiting Student Management System. Goodbye!")
                 logging.info("Student Management System exited.")
