@@ -1,6 +1,6 @@
 """
 Course: BSE2302	PROFESSIONAL SOFTWARE ENGINEERING MINI PRACTICAL PROJECT II
-Assignment3: Contact Manager
+Assignment4: Contact Manager
 Name: Mukisa Ben Ezra
 RegNo: 24/U/21328
 Date: June 18, 2026

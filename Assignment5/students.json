@@ -1,0 +1,32 @@
+[
+    {
+        "reg_no": "24/U/001",
+        "address": "123 Main St, CityA",
+        "contact": "alice@example.com",
+        "program": "Computer Science"
+    },
+    {
+        "reg_no": "24/U/002/PS",
+        "address": "456 Oak Ave, CityB",
+        "contact": "bob@example.com",
+        "program": "Software Engineering"
+    },
+    {
+        "reg_no": "24/U/003",
+        "address": "789 Pine Ln, CityC",
+        "contact": "charlie@example.com",
+        "program": "Data Science"
+    },
+    {
+        "reg_no": "24/U/004/PS",
+        "address": "101 Elm Rd, CityD",
+        "contact": "diana@example.com",
+        "program": "Cyber Security"
+    },
+    {
+        "reg_no": "24/U/21456",
+        "address": "Kikoni, Mak",
+        "contact": "hanz@gmail.com",
+        "program": "Software Eng"
+    }
+]
