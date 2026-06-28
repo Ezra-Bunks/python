@@ -1,0 +1,16 @@
+2026-06-28 22:44:56,227 - INFO - Student Management System initialized.
+2026-06-28 22:44:56,227 - INFO - Attempting to load student data.
+2026-06-28 22:44:56,228 - INFO - Data loading complete.
+2026-06-28 22:44:56,228 - INFO - Student Management System started.
+2026-06-28 22:45:17,836 - INFO - User chose option: 2
+2026-06-28 22:45:17,837 - INFO - Viewed all 5 student records.
+2026-06-28 22:45:26,130 - INFO - User chose option: 1
+2026-06-28 22:46:21,598 - INFO - Attempting to save student data.
+2026-06-28 22:46:21,599 - INFO - Data saving complete.
+2026-06-28 22:46:21,600 - INFO - Added new student: 23/U/21324 - Musingye Denis
+2026-06-28 22:46:29,690 - INFO - User chose option: 4
+2026-06-28 22:46:58,644 - INFO - Attempting to save student data.
+2026-06-28 22:46:58,646 - INFO - Data saving complete.
+2026-06-28 22:46:58,646 - INFO - Updated student: 24/U/21456
+2026-06-28 22:47:05,340 - INFO - User chose option: 6
+2026-06-28 22:47:05,340 - INFO - Student Management System exited.

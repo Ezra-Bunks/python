@@ -1,14 +1,16 @@
 import csv
 import json
+import logging
 
 # --- Configuration ---
 CSV_FILE = 'students.csv'
 JSON_FILE = 'students.json'
+LOG_FILE = 'student_system.log'
 
-# --- Student Class ---
+logging.basicConfig(filename=LOG_FILE, level=logging.INFO,
+                    format='%(asctime)s - %(levelname)s - %(message)s')
+
 class Student:
-    """Represents a single student record."""
-
     def __init__(self, reg_no, name, age, grade, address="", contact="", program=""):
         self.reg_no = reg_no
         self.name = name
@@ -63,11 +65,13 @@ class StudentManagementSystem:
     def __init__(self, csv_file=CSV_FILE, json_file=JSON_FILE):
         self.csv_file = csv_file
         self.json_file = json_file
-        self.students = {}  # Dictionary to store Student objects: {reg_no: Student_object}
+        self.students = {}  # Dictionary to store student objects
+        logging.info("Student Management System initialized.")
         self._load_data()
 
     def _load_data(self):
         """Loads student data from CSV and JSON files."""
+        logging.info("Attempting to load student data.")
         try:
             with open(self.csv_file, mode='r', newline='', encoding='utf-8') as file:
                 reader = csv.reader(file)
@@ -77,11 +81,11 @@ class StudentManagementSystem:
                         student = Student.from_csv_row(row)
                         self.students[student.reg_no] = student
                     except ValueError:
-                        print(f"Skipping malformed CSV row: {row}")
+                        logging.warning(f"Skipping malformed CSV row: {row}")
         except FileNotFoundError:
-            print(f"CSV file '{self.csv_file}' not found. Starting with no basic student data.")
+            logging.warning(f"CSV file '{self.csv_file}' not found. Starting with no basic student data.")
         except Exception as e:
-            print(f"Error loading basic student data: {e}")
+            logging.error(f"Error loading basic student data: {e}")
 
         try:
             with open(self.json_file, mode='r', encoding='utf-8') as file:
@@ -91,17 +95,18 @@ class StudentManagementSystem:
                     if reg_no and reg_no in self.students:
                         self.students[reg_no].update_from_json_data(json_data)
                     elif reg_no:
-                        print(f"Warning: Student with Reg No {reg_no} found in JSON but not CSV. Skipping JSON details.")
+                        logging.warning(f"Student with Reg No {reg_no} found in JSON but not CSV. Skipping JSON details.")
         except FileNotFoundError:
-            print(f"JSON file '{self.json_file}' not found. Starting with no additional student data.")
+            logging.warning(f"JSON file '{self.json_file}' not found. Starting with no additional student data.")
         except json.JSONDecodeError as e:
-            print(f"Error decoding additional student data from '{self.json_file}': {e}")
+            logging.error(f"Error decoding additional student data from '{self.json_file}': {e}")
         except Exception as e:
-            print(f"Error loading additional student data: {e}")
-        print("Data loading complete.")
+            logging.error(f"Error loading additional student data: {e}")
+        logging.info("Data loading complete.")
 
     def _save_data(self):
-        """Saves all student data back to CSV and JSON files."""
+        """Saves student data to CSV and JSON files."""
+        logging.info("Attempting to save student data.")
         try:
             with open(self.csv_file, mode='w', newline='', encoding='utf-8') as file:
                 writer = csv.writer(file)
@@ -109,15 +114,15 @@ class StudentManagementSystem:
                 for student in self.students.values():
                     writer.writerow(student.to_csv_row())
         except Exception as e:
-            print(f"Error saving basic student data: {e}")
+            logging.error(f"Error saving basic student data: {e}")
 
         try:
             json_data_list = [student.to_json_data() for student in self.students.values()]
             with open(self.json_file, mode='w', encoding='utf-8') as file:
                 json.dump(json_data_list, file, indent=4)
         except Exception as e:
-            print(f"Error saving additional student data: {e}")
-        print("Data saving complete.")
+            logging.error(f"Error saving additional student data: {e}")
+        logging.info("Data saving complete.")
 
     def add_student(self):
         """Prompts for student details and adds a new student."""
@@ -127,11 +132,13 @@ class StudentManagementSystem:
 
             if reg_no in self.students:
                 print(f"Error: Student with Registration Number '{reg_no}' already exists.")
+                logging.warning(f"Attempted to add existing student: {reg_no}")
                 return
 
             name = input("Enter Name: ").strip()
             if not name:
                 print("Error: Name cannot be empty.")
+                logging.warning("Attempted to add student with empty name.")
                 return
 
             age = int(input("Enter Age: "))
@@ -145,22 +152,27 @@ class StudentManagementSystem:
             self.students[reg_no] = new_student
             self._save_data()
             print(f"Student '{name}' (Reg No: {reg_no}) added successfully.")
+            logging.info(f"Added new student: {reg_no} - {name}")
 
         except ValueError as e:
             print(f"Input Error: Please enter valid numbers for Age and Grade. ({e})")
+            logging.error(f"Input error during add_student: {e}")
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
+            logging.error(f"Unexpected error during add_student: {e}")
 
     def view_all_students(self):
         """Displays all student records."""
         print("\n--- All Student Records ---")
         if not self.students:
             print("No student records available.")
+            logging.info("Attempted to view all students, but no records exist.")
             return
 
         for student in self.students.values():
             print(student)
         print("---------------------------")
+        logging.info(f"Viewed all {len(self.students)} student records.")
 
     def search_student(self):
         """Searches for a student by registration number and displays details."""
@@ -169,11 +181,13 @@ class StudentManagementSystem:
 
         if reg_no not in self.students:
             print(f"Search Error: Student with Registration Number '{reg_no}' not found.")
+            logging.warning(f"Search for non-existent student: {reg_no}")
             return
 
         student = self.students[reg_no]
         print("\n--- Student Found ---")
         print(student)
+        logging.info(f"Searched and found student: {reg_no}")
 
     def update_student(self):
         """Updates details of an existing student."""
@@ -183,6 +197,7 @@ class StudentManagementSystem:
 
             if reg_no not in self.students:
                 print(f"Update Error: Student with Registration Number '{reg_no}' not found.")
+                logging.warning(f"Attempted to update non-existent student: {reg_no}")
                 return
 
             student = self.students[reg_no]
@@ -216,11 +231,14 @@ class StudentManagementSystem:
 
             self._save_data()
             print(f"Student '{student.name}' (Reg No: {reg_no}) updated successfully.")
+            logging.info(f"Updated student: {reg_no}")
 
         except ValueError as e:
             print(f"Input Error: Please enter valid numbers for Age and Grade. ({e})")
+            logging.error(f"Input error during update_student: {e}")
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
+            logging.error(f"Unexpected error during update_student: {e}")
 
     def delete_student(self):
         """Deletes a student record by registration number."""
@@ -229,15 +247,18 @@ class StudentManagementSystem:
 
         if reg_no not in self.students:
             print(f"Delete Error: Student with Registration Number '{reg_no}' not found.")
+            logging.warning(f"Attempted to delete non-existent student: {reg_no}")
             return
 
         student_name = self.students[reg_no].name
         del self.students[reg_no]
         self._save_data()
         print(f"Student '{student_name}' (Reg No: {reg_no}) deleted successfully.")
+        logging.info(f"Deleted student: {reg_no} - {student_name}")
 
     def run(self):
-        """Main menu-driven loop for the Student Management System."""
+        """Main menu-driven loop for the system."""
+        logging.info("Student Management System started.")
         print("Welcome to the Student Record Management System!")
 
         while True:
@@ -250,6 +271,7 @@ class StudentManagementSystem:
             print("6. Exit")
 
             choice = input("Enter your choice (1-6): ").strip()
+            logging.info(f"User chose option: {choice}")
 
             if choice == '1':
                 self.add_student()
@@ -263,6 +285,8 @@ class StudentManagementSystem:
                 self.delete_student()
             elif choice == '6':
                 print("Exiting Student Management System. Goodbye!")
+                logging.info("Student Management System exited.")
                 break
             else:
                 print("Invalid choice. Please enter a number between 1 and 6.")
+                logging.warning(f"Invalid menu choice: {choice}")
